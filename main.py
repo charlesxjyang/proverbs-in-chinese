@@ -16,8 +16,7 @@ import json
 ESV_API_KEY = os.environ['ESV_API_KEY']
 EMAIL_SENDER = os.environ['EMAIL_SENDER']
 EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
-print(os.environ['EMAIL_RECEIVER'])
-EMAIL_RECEIVER = json.loads(os.environ['EMAIL_RECEIVER'])
+EMAIL_RECEIVER = os.environ['EMAIL_RECEIVER']
 
 
 def get_random_proverb():
@@ -64,10 +63,10 @@ def send_email(proverb, chinese_translation, pinyin, sender_email,
 
 def main():
     proverb, chinese_proverb = get_random_proverb()
-    pinyin = get_pinyin(chinese_translation)
+    pinyin = get_pinyin(chinese_proverb)
     for receiver in EMAIL_RECEIVER:
-        send_email(proverb, chinese_translation, pinyin, EMAIL_SENDER,
-                   receiver, EMAIL_PASSWORD)
+        send_email(proverb, chinese_proverb, pinyin, EMAIL_SENDER, receiver,
+                   EMAIL_PASSWORD)
 
 
 if __name__ == "__main__":

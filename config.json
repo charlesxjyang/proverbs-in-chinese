@@ -2,5 +2,6 @@
     "ESV_API_KEY": "85adf319d41ac1374592bfa9be6ff11a7f0ff3e8",
     "EMAIL_SENDER": "charlesxjyang@gmail.com",
     "EMAIL_PASSWORD": "pxqj tmmb ttzl eqtg",
-    "EMAIL_RECEIVER": "charlesxjyang@gmail.com"
+    "EMAIL_RECEIVER": ["charlesxjyang@gmail.com"],
+    "BIBLE_API_KEY": "f794c2197793c0033a4f0973bc697e31"
 }

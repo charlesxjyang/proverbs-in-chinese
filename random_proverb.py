@@ -1,11 +1,14 @@
 import re
 import random
 import requests
+import json
 import os
+
+import requests
+from bs4 import BeautifulSoup
 
 ESV_API_KEY = os.environ['ESV_API_KEY']
 BIBLE_API_KEY = os.environ['BIBLE_API_KEY']
-BIBLE_API_URL = 'https://api.scripture.api.bible/v1/bibles/'
 ESV_API_URL = 'https://api.esv.org/v3/passage/text/'
 
 CHAPTER_LENGTHS = [
@@ -22,17 +25,27 @@ def get_proverbs():
 
 
 def get_chinese_text(chapter, verse):
-    url = f"{BIBLE_API_URL}/books/13/"
-    headers = {"api-key": BIBLE_API_KEY}
-    response = requests.get(BIBLE_API_URL, headers=headers)
-    print(response)
-    if response.status_code == 200:
-        data = response.json()
-        verse_text = data.get('data', {}).get('content', '').strip()
-        return verse_text
-    else:
-        raise Exception(
-            f"Failed to fetch verse: {response.status_code} - {response.text}")
+    url = f"https://www.biblegateway.com/passage/?search=Proverb {chapter}:{verse}&version=CNVS"
+    headers = {
+        "User-Agent": "Mozilla/5.0"  # To avoid bot blocking
+    }
+
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        raise Exception(f"Failed to fetch page: {response.status_code}")
+
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # Look for verse container within passage content
+    passage_div = soup.find("div", class_="passage-text")
+    if not passage_div:
+        raise Exception("Could not find passage-text div")
+
+    # assume only one verse block
+    verse = passage_div.find("span", class_="text")
+    text = verse.get_text(strip=True)
+    cleaned = re.sub(r"^\d+[\s\u202f：:]*", "", text)
+    return cleaned
 
 
 def get_esv_text(passage):
