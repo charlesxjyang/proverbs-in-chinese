@@ -1,33 +1,51 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from googletrans import Translator
-import random
-import pypinyin
-from random_proverb import get_esv_text, get_proverbs
-from dotenv import load_dotenv
+#from googletrans import Translator
+from pypinyin import pinyin, Style
+from random_proverb import get_esv_text, get_proverbs, get_chinese_text
+import os
 
-# Load environment variables from .env file
-load_dotenv()
+import json
 
-ESV_API_KEY = os.getenv('ESV_API_KEY')
-EMAIL_SENDER = os.getenv('EMAIL_SENDER')
-EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
-EMAIL_RECEIVER = os.getenv('EMAIL_RECEIVER')
+#with open('config.json') as config_file:
+#   config = json.load(config_file)
+
+import os
+import json
+
+for receiver_email in receiver_emails:
+    send_email(proverb="Example",
+               chinese_translation="示例",
+               pinyin="shì lì",
+               sender_email=os.environ["SENDER_EMAIL"],
+               receiver_email=receiver_email,
+               password=os.environ["EMAIL_PASSWORD"])
+
+ESV_API_KEY = os.environ['ESV_API_KEY']
+EMAIL_SENDER = os.environ['EMAIL_SENDER']
+EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
+EMAIL_RECEIVER = json.loads(os.environ['EMAIL_RECEIVER'])
+# Replace 'your-api-key' with you\
+
 
 def get_random_proverb():
-    return get_esv_text(get_proverbs())
+    proverbs_data, chapter, verse = get_proverbs()
+    return get_esv_text(proverbs_data), get_chinese_text(chapter, verse)
 
-def translate_to_chinese(text):
-    translator = Translator()
-    translation = translator.translate(text, src='en', dest='zh-cn')
-    return translation.text
 
 def get_pinyin(chinese_text):
-    pinyin_list = pypinyin.lazy_pinyin(chinese_text)
-    return ' '.join(pinyin_list)
+    # Get pinyin with tones
+    pinyin_with_tones = pinyin(chinese_text, style=Style.TONE3)
 
-def send_email(proverb, chinese_translation, pinyin, sender_email, receiver_email, password):
+    # Flatten the list of lists into a single string
+    pinyin_with_tones_flat = ' '.join([item[0] for item in pinyin_with_tones])
+
+    return pinyin_with_tones_flat
+
+
+def send_email(proverb, chinese_translation, pinyin, sender_email,
+               receiver_email, password):
     subject = "Daily Proverb"
 
     # Create the email content
@@ -52,17 +70,14 @@ def send_email(proverb, chinese_translation, pinyin, sender_email, receiver_emai
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, msg.as_string())
 
+
 def main():
-    proverb = get_random_proverb()
-    chinese_translation = translate_to_chinese(proverb)
+    proverb, chinese_proverb = get_random_proverb()
     pinyin = get_pinyin(chinese_translation)
+    for receiver in EMAIL_RECEIVER:
+        send_email(proverb, chinese_translation, pinyin, EMAIL_SENDER,
+                   receiver, EMAIL_PASSWORD)
 
-    # Use environment variables for email credentials
-    sender_email = os.getenv('EMAIL_SENDER')
-    receiver_email = os.getenv('EMAIL_RECEIVER')
-    password = os.getenv('EMAIL_PASSWORD')
-
-    send_email(proverb, chinese_translation, pinyin, sender_email, receiver_email, password)
 
 if __name__ == "__main__":
     main()
