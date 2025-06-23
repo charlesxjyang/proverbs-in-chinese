@@ -8,7 +8,6 @@ import requests
 from bs4 import BeautifulSoup
 
 ESV_API_KEY = os.environ['ESV_API_KEY']
-BIBLE_API_KEY = os.environ['BIBLE_API_KEY']
 ESV_API_URL = 'https://api.esv.org/v3/passage/text/'
 
 CHAPTER_LENGTHS = [
@@ -27,7 +26,12 @@ def get_proverbs():
 def get_chinese_text(chapter, verse):
     url = f"https://www.biblegateway.com/passage/?search=Proverb {chapter}:{verse}&version=CNVS"
     headers = {
-        "User-Agent": "Mozilla/5.0"  # To avoid bot blocking
+        "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/114.0.0.0 Safari/537.36",
+        "Accept-Language":
+        "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
     }
 
     response = requests.get(url, headers=headers)
