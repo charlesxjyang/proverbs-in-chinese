@@ -16,8 +16,18 @@ import json
 ESV_API_KEY = os.environ['ESV_API_KEY']
 EMAIL_SENDER = os.environ['EMAIL_SENDER']
 EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
-print(os.environ['EMAIL_RECEIVER'])
-EMAIL_RECEIVER = json.loads(os.environ['EMAIL_RECEIVER'])
+print("== RAW EMAIL_RECEIVER ENV VAR ==")
+print(os.environ.get("EMAIL_RECEIVER", "[not set]"))
+
+try:
+    EMAIL_RECEIVER = json.loads(os.environ["EMAIL_RECEIVER"])
+    print("== PARSED EMAIL_RECEIVER LIST ==")
+    print(EMAIL_RECEIVER)
+except json.JSONDecodeError as e:
+    print("!! JSONDecodeError parsing EMAIL_RECEIVER !!")
+    print(os.environ['EMAIL_RECEIVER'])
+    print(str(e))
+    raiseEMAIL_RECEIVER = json.loads(os.environ['EMAIL_RECEIVER'])
 
 
 def get_random_proverb():
