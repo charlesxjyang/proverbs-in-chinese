@@ -12,7 +12,7 @@ jobs:
     env:
       EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
+      ESV_API_KEY: ${{ secrets.ESV_API_KEY }}
       BIBLE_API_KEY: ${{ secrets.BIBLE_API_KEY }}
       EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
       
