@@ -1,7 +1,6 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-#from googletrans import Translator
 from pypinyin import pinyin, Style
 from random_proverb import get_esv_text, get_proverbs, get_chinese_text
 import os
@@ -13,14 +12,6 @@ import json
 
 import os
 import json
-
-for receiver_email in receiver_emails:
-    send_email(proverb="Example",
-               chinese_translation="示例",
-               pinyin="shì lì",
-               sender_email=os.environ["SENDER_EMAIL"],
-               receiver_email=receiver_email,
-               password=os.environ["EMAIL_PASSWORD"])
 
 ESV_API_KEY = os.environ['ESV_API_KEY']
 EMAIL_SENDER = os.environ['EMAIL_SENDER']
