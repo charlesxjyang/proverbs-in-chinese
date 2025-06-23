@@ -46,10 +46,19 @@ def get_chinese_text(chapter, verse):
         raise Exception("Could not find passage-text div")
 
     # assume only one verse block
-    verse = passage_div.find("span", class_="text")
-    text = verse.get_text(strip=True)
-    cleaned = re.sub(r"^\d+[\s\u202f：:]*", "", text)
-    return cleaned
+
+    for span in passage_div.find_all("span", class_="text"):
+        parent_classes = span.parent.get("class", [])
+        if any(c in ["heading", "chapternum", "footnote", "crossreference"]
+               for c in parent_classes):
+            continue
+        verse_text = span.get_text(strip=True)
+        if verse_text:
+            # Strip leading verse number (e.g. "4 " or "4：")
+            cleaned = re.sub(r"^\d+[\s\u202f：:]*", "", verse_text)
+            return cleaned
+
+    raise Exception("Could not find verse text")
 
 
 def get_esv_text(passage):
