@@ -45,7 +45,7 @@ def get_chinese_text(chapter, verse):
     if not passage_div:
         raise Exception("Could not find passage-text div")
 
-    # assume only one verse block
+    output = []
     for span in passage_div.find_all("span", class_="text"):
         parent_classes = span.parent.get("class", [])
         # skip if it's a heading, chapternum, or footnote container
