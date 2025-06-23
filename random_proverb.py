@@ -1,6 +1,7 @@
 import re
 import random
 import requests
+import os
 
 ESV_API_KEY = os.environ['ESV_API_KEY']
 BIBLE_API_KEY = os.environ['BIBLE_API_KEY']
