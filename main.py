@@ -16,8 +16,8 @@ import json
 ESV_API_KEY = os.environ['ESV_API_KEY']
 EMAIL_SENDER = os.environ['EMAIL_SENDER']
 EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
+print(os.environ['EMAIL_RECEIVER'])
 EMAIL_RECEIVER = json.loads(os.environ['EMAIL_RECEIVER'])
-# Replace 'your-api-key' with you\
 
 
 def get_random_proverb():
